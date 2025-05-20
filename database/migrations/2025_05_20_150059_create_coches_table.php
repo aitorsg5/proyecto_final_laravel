@@ -12,8 +12,7 @@ return new class extends Migration
             $table->id();
 
             // Relaciones (foreign keys)
-$table->string('nombre', 255);
-
+            $table->string('nombre', 255);
             $table->foreignId('kit_id')->constrained('kits')->onDelete('cascade');
             $table->foreignId('caja_id')->constrained('cajas')->onDelete('cascade');
             $table->foreignId('modelo_id')->constrained('modelos')->onDelete('cascade');

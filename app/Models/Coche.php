@@ -7,9 +7,21 @@ use Illuminate\Database\Eloquent\Model;
 class Coche extends Model
 {
     protected $fillable = [
-        'nombre', 'kit_id', 'caja_id', 'modelo_id', 'motor_id', 'precio_basico', 'precio_total',
+        'nombre',
+        'kit_id',
+        'caja_id',
+        'modelo_id',
+        'motor_id',
+        'precio_basico',
+        'precio_total',
+        'imagenes', // <- ¡Importante! Añadido para poder guardar imágenes
     ];
 
+    protected $casts = [
+        'imagenes' => 'array', // Para que el campo JSON se maneje como array en PHP
+    ];
+
+    // Relaciones
     public function kit()
     {
         return $this->belongsTo(Kit::class);
@@ -30,16 +42,11 @@ class Coche extends Model
         return $this->belongsTo(Motor::class);
     }
 
+    // Calcula el precio con IVA automáticamente al crear o actualizar
     protected static function booted()
     {
-        static::creating(function ($coche) {
-            if (isset($coche->precio_basico)) {
-                $coche->precio_total = round($coche->precio_basico * 1.21, 2); // aplica 21% IVA y redondea a 2 decimales
-            }
-        });
-
-        static::updating(function ($coche) {
-            if (isset($coche->precio_basico)) {
+        static::saving(function ($coche) {
+            if (!is_null($coche->precio_basico)) {
                 $coche->precio_total = round($coche->precio_basico * 1.21, 2);
             }
         });

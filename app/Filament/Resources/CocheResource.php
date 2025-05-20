@@ -25,6 +25,16 @@ class CocheResource extends Resource
                     ->required()
                     ->maxLength(255),
 
+                Forms\Components\FileUpload::make('imagenes')
+                    ->label('Imágenes del coche')
+                    ->multiple()
+                    ->reorderable()
+                    ->image()
+                    ->imagePreviewHeight('100')
+                    ->directory('coches')
+                    ->preserveFilenames()
+                    ->maxSize(2048),
+
                 Forms\Components\Select::make('kit_id')
                     ->label('Kit')
                     ->relationship('kit', 'paquete')
@@ -67,6 +77,11 @@ class CocheResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\ImageColumn::make('imagenes.0')
+                    ->label('Imagen')
+                    ->circular()
+                    ->size(40),
+
                 Tables\Columns\TextColumn::make('nombre')->label('Nombre'),
                 Tables\Columns\TextColumn::make('kit.paquete')->label('Kit'),
                 Tables\Columns\TextColumn::make('caja.tipo')->label('Caja'),
