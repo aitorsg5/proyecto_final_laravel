@@ -14,11 +14,11 @@ class Coche extends Model
         'motor_id',
         'precio_basico',
         'precio_total',
-        'imagenes', // <- ¡Importante! Añadido para poder guardar imágenes
+        'imagenes', // Guardar imágenes
     ];
 
     protected $casts = [
-        'imagenes' => 'array', // Para que el campo JSON se maneje como array en PHP
+        'imagenes' => 'array', // Manejo como array en PHP
     ];
 
     // Relaciones
@@ -42,13 +42,29 @@ class Coche extends Model
         return $this->belongsTo(Motor::class);
     }
 
-    // Calcula el precio con IVA automáticamente al crear o actualizar
+    // Método para calcular el precio total sumando componentes y aplicando IVA
+    public function calcularPrecioTotal()
+    {
+        return round(
+            ($this->kit->precio + 
+             $this->caja->precio + 
+             $this->modelo->precio + 
+             $this->motor->precio + 
+             $this->precio_basico) * 1.21, 
+            2
+        );
+    }
+
+    // Evento para calcular y guardar el precio total antes de guardar el coche
     protected static function booted()
     {
         static::saving(function ($coche) {
-            if (!is_null($coche->precio_basico)) {
-                $coche->precio_total = round($coche->precio_basico * 1.21, 2);
-            }
+            $coche->precio_total = $coche->calcularPrecioTotal();
         });
     }
+    public function getImagenesUrlAttribute()
+{
+    return collect($this->imagenes)->map(fn ($imagen) => url("storage/coches/{$imagen}"));
+}
+
 }
