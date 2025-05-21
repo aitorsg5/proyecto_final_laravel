@@ -60,4 +60,4 @@ $scrollIntoViewJsSnippet = ($scrollTo !== false)
         </nav>
     <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 </div>
-<?php /**PATH C:\Users\usuario\Desktop\proyecto_final\proyecto_final\laravel-blog-project-main\vendor\livewire\livewire\src\Features\SupportPagination/views/simple-tailwind.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\usuario\Desktop\proyecto_final\proyecto_final\laravel-blog-project-main\resources\views/vendor/livewire/simple-tailwind.blade.php ENDPATH**/ ?>

@@ -9,14 +9,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('coches', function (Blueprint $table) {
-            $table->json('imagenes')->nullable()->after('nombre');
+             $table->json('imagenes_ruta')->nullable();
+
         });
     }
 
     public function down(): void
     {
         Schema::table('coches', function (Blueprint $table) {
-            $table->dropColumn('imagenes');
+            $table->dropColumn('imagenes_ruta'); // Elimina la columna en caso de rollback
         });
     }
 };

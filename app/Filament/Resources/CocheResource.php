@@ -25,43 +25,36 @@ class CocheResource extends Resource
                     ->required()
                     ->maxLength(255),
 
-                Forms\Components\FileUpload::make('imagenes')
+                Forms\Components\FileUpload::make('imagenes_ruta')
                     ->label('Imágenes del coche')
                     ->multiple()
-                    ->reorderable()
-                    ->image()
-                    ->imagePreviewHeight('100')
-                    ->directory('coches')
+                    ->directory('coches') // Asegura que las imágenes se almacenen en /storage/coches/
                     ->preserveFilenames()
-                    ->maxSize(2048),
+                    ->image(),
 
                 Forms\Components\Select::make('kit_id')
                     ->label('Kit')
                     ->relationship('kit', 'paquete')
                     ->required()
-                    ->reactive()
-                    ->afterStateUpdated(fn ($state, callable $set, $get) => $set('precio_basico', $get('precio_basico'))),
+                    ->reactive(),
 
                 Forms\Components\Select::make('caja_id')
                     ->label('Caja')
                     ->relationship('caja', 'tipo')
                     ->required()
-                    ->reactive()
-                    ->afterStateUpdated(fn ($state, callable $set, $get) => $set('precio_basico', $get('precio_basico'))),
+                    ->reactive(),
 
                 Forms\Components\Select::make('modelo_id')
                     ->label('Modelo')
                     ->relationship('modelo', 'nombre')
                     ->required()
-                    ->reactive()
-                    ->afterStateUpdated(fn ($state, callable $set, $get) => $set('precio_basico', $get('precio_basico'))),
+                    ->reactive(),
 
                 Forms\Components\Select::make('motor_id')
                     ->label('Motor')
                     ->relationship('motor', 'motor')
                     ->required()
-                    ->reactive()
-                    ->afterStateUpdated(fn ($state, callable $set, $get) => $set('precio_basico', $get('precio_basico'))),
+                    ->reactive(),
 
                 Forms\Components\TextInput::make('precio_basico')
                     ->label('Precio Básico')
@@ -90,11 +83,6 @@ class CocheResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('imagenes_url.0')
-                    ->label('Imagen')
-                    ->circular()
-                    ->size(40),
-
                 Tables\Columns\TextColumn::make('nombre')->label('Nombre'),
                 Tables\Columns\TextColumn::make('kit.paquete')->label('Kit'),
                 Tables\Columns\TextColumn::make('caja.tipo')->label('Caja'),
@@ -102,6 +90,10 @@ class CocheResource extends Resource
                 Tables\Columns\TextColumn::make('motor.motor')->label('Motor'),
                 Tables\Columns\TextColumn::make('precio_basico')->label('Precio Básico')->money('eur', true),
                 Tables\Columns\TextColumn::make('precio_total')->label('Precio Total')->money('eur', true),
+
+               Tables\Columns\ImageColumn::make('imagenes_ruta')
+    ->label('Imágenes')
+    ->getStateUsing(fn ($record) => collect($record->imagenes_ruta)->map(fn ($ruta) => asset("storage/{$ruta}"))->toArray()),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -112,7 +104,6 @@ class CocheResource extends Resource
                 ]),
             ]);
     }
-    
 
     public static function getRelations(): array
     {
