@@ -25,12 +25,20 @@ class CocheResource extends Resource
                     ->required()
                     ->maxLength(255),
 
-                Forms\Components\FileUpload::make('imagenes_ruta')
-                    ->label('Imágenes del coche')
-                    ->multiple()
-                    ->directory('coches') // Asegura que las imágenes se almacenen en /storage/coches/
-                    ->preserveFilenames()
-                    ->image(),
+                
+Forms\Components\FileUpload::make('imagenes_ruta')
+    ->label('Imágenes')
+    ->image()
+    ->directory('coches')
+    ->preserveFilenames()
+    ->previewable()
+        ->multiple()
+
+    ->visibility('public')
+    ->getUploadedFileNameForStorageUsing(fn ($file) => "coches/{$file->getClientOriginalName()}"),
+
+
+
 
                 Forms\Components\Select::make('kit_id')
                     ->label('Kit')

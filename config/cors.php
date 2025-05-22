@@ -18,8 +18,9 @@ return [
     'paths' => ['api/*', 'sanctum/csrf-cookie','*'],
 
     'allowed_methods' => ['*'],
+    'allowed_origins' => ['*'], // Permite accesos desde cualquier dominio
 
-    'allowed_origins' => ['*'],
+
 
     'allowed_origins_patterns' => [],
 

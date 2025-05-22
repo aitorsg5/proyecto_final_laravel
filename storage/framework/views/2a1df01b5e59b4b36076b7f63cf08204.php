@@ -313,9 +313,9 @@
 
         <div
             <?php if(filament()->hasTenancy()): ?>
-                x-persist="topbar.end.tenant-<?php echo e(filament()->getTenant()?->getKey()); ?>"
+                x-persist="topbar.end.panel-<?php echo e(filament()->getId()); ?>.tenant-<?php echo e(filament()->getTenant()?->getKey()); ?>"
             <?php else: ?>
-                x-persist="topbar.end"
+                x-persist="topbar.end.panel-<?php echo e(filament()->getId()); ?>"
             <?php endif; ?>
             class="ms-auto flex items-center gap-x-4"
         >
