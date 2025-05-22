@@ -42,3 +42,15 @@ Route::middleware([
     //     return view('dashboard');
     // })->name('dashboard');
 });
+Route::get('/storage/coches/{filename}', function ($filename) {
+    $path = storage_path("app/public/coches/{$filename}");
+
+    if (!file_exists($path)) {
+        return response()->json(['error' => 'Archivo no encontrado'], 404);
+    }
+
+    return response()->file($path)
+        ->header('Access-Control-Allow-Origin', '*')
+        ->header('Access-Control-Allow-Methods', 'GET')
+        ->header('Access-Control-Allow-Headers', 'Content-Type');
+});
