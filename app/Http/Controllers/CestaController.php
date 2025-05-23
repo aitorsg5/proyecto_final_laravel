@@ -18,22 +18,26 @@ class CestaController extends Controller
     /**
      * Crear una nueva cesta.
      */
-    public function store(Request $request)
-    {
-        $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'coche_id' => 'required|exists:coches,id',
-            'kit_id' => 'required|exists:kits,id',
-            'caja_id' => 'required|exists:cajas,id',
-            'modelo_id' => 'required|exists:modelos,id',
-            'motor_id' => 'required|exists:motores,id',
-            'precio_total' => 'required|numeric',
-        ]);
+public function store(Request $request)
+{
+    $request->validate([
+        'coche_id' => 'required|exists:coches,id',
+        'kit_id' => 'required|exists:kits,id',
+        'caja_id' => 'required|exists:cajas,id',
+        'modelo_id' => 'required|exists:modelos,id',
+        'motor_id' => 'required|exists:motores,id',
+        'precio_total' => 'required|numeric',
+    ]);
 
-        $cesta = Cesta::create($request->all());
+    $cesta = Cesta::create(array_merge(
+        $request->only(['coche_id', 'kit_id', 'caja_id', 'modelo_id', 'motor_id', 'precio_total']),
+    ['user_id' => 1]  // ID fijo para pruebas
+    ));
 
-        return response()->json(['message' => 'Cesta creada con éxito', 'cesta' => $cesta], 201);
-    }
+    return response()->json(['message' => 'Cesta creada con éxito', 'cesta' => $cesta], 201);
+}
+
+
 
     /**
      * Mostrar una cesta específica.
@@ -58,6 +62,21 @@ class CestaController extends Controller
 
         return response()->json(['message' => 'Cesta actualizada con éxito', 'cesta' => $cesta]);
     }
+/**
+ * Verificar si el usuario tiene un coche en la cesta.
+ */
+public function existeCocheEnCesta(Request $request)
+{
+    $request->validate([
+        'coche_id' => 'required|exists:coches,id',
+    ]);
+
+    $existe = Cesta::where('user_id', auth()->id())
+        ->where('coche_id', $request->coche_id)
+        ->exists();
+
+    return response()->json(['existe' => $existe]);
+}
 
     /**
      * Eliminar una cesta.

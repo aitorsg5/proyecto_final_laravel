@@ -12,11 +12,11 @@ use Illuminate\Support\Facades\Storage;
 
 class CocheController extends Controller
 {
-    public function index()
-    {
-        $coches = Coche::with(['kit', 'caja', 'modelo', 'motor'])->get();
-        return view('coches.index', compact('coches'));
-    }
+   
+        public function index()
+{
+    return response()->json(Coche::with(['kit', 'caja', 'modelo', 'motor'])->get());
+}
 
     public function create()
     {
@@ -68,10 +68,17 @@ class CocheController extends Controller
         return redirect()->route('coches.index')->with('success', 'Coche creado correctamente.');
     }
 
-    public function show(Coche $coche)
-    {
-        return view('coches.show', compact('coche'));
+    public function show($id)
+{
+    $coche = Coche::with(['kit', 'caja', 'modelo', 'motor'])->find($id);
+
+    if (!$coche) {
+        return response()->json(['message' => 'Coche no encontrado'], 404);
     }
+
+    return response()->json($coche);
+}
+
 
     public function edit(Coche $coche)
     {
@@ -146,4 +153,7 @@ class CocheController extends Controller
 
         return redirect()->route('coches.index')->with('success', 'Coche eliminado correctamente.');
     }
+
+
+
 }

@@ -26,6 +26,17 @@ public function login(Request $request)
     return response()->json($usuario);
 }
 
+public function logout(Request $request)
+{
+    auth()->logout(); // Cierra sesión del usuario actual
+
+    // Opcional: invalidar token o sesión si usas token-based auth o sessions
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+
+    return response()->json(['message' => 'Sesión cerrada correctamente']);
+}
+
 public function store(Request $request)
 {
     // Validamos los datos recibidos
