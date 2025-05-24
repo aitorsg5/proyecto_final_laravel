@@ -25,7 +25,7 @@ class CocheResource extends Resource
                     ->required()
                     ->maxLength(255),
 
-                
+
 Forms\Components\FileUpload::make('imagenes_ruta')
     ->label('Imágenes')
     ->image()
@@ -35,7 +35,7 @@ Forms\Components\FileUpload::make('imagenes_ruta')
         ->multiple()
 
     ->visibility('public')
-    ->getUploadedFileNameForStorageUsing(fn ($file) => "coches/{$file->getClientOriginalName()}"),
+    ->getUploadedFileNameForStorageUsing(fn ($file) => "{$file->getClientOriginalName()}"),
 
 
 
