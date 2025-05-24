@@ -7,7 +7,6 @@ use App\Http\Controllers\KitController;
 use App\Http\Controllers\CajaController;
 use App\Http\Controllers\MotorController;
 use App\Http\Controllers\CestaController;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -27,8 +26,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 Route::post('/post', [UserController::class, 'store']);
 Route::post('/login', [UserController::class, 'login']);
-Route::post('/logout', [UserController::class, 'logout']);
 
+
+Route::middleware('auth:sanctum')->post('/logout', [UserController::class, 'logout']);
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
