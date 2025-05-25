@@ -9,8 +9,8 @@ class KitController extends Controller
 {
     public function index()
     {
-        $kits = Kit::all();
-        return view('kits.index', compact('kits'));
+           return response()->json(Kit::all());
+
     }
 
     public function create()

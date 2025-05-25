@@ -12,7 +12,6 @@ public function index()
 }
 public function login(Request $request)
 {
-    // Validamos las credenciales
     $credentials = $request->validate([
         'email' => 'required|email',
         'password' => 'required',
@@ -23,8 +22,36 @@ public function login(Request $request)
     }
 
     $usuario = auth()->user();
-    return response()->json($usuario);
+
+    // Crear un token personal para este usuario
+    $token = $usuario->createToken('token_app')->plainTextToken;
+
+    // Devolver usuario + token
+    return response()->json([
+        'user' => $usuario,
+        'token' => $token,
+    ]);
 }
+
+public function logout(Request $request)
+{
+    try {
+        $user = $request->user();
+
+        if (!$user) {
+            return response()->json(['error' => 'Usuario no autenticado'], 401);
+        }
+
+        $user->tokens()->delete();
+
+        return response()->json(['message' => 'Logged out successfully']);
+    } catch (\Exception $e) {
+        \Log::error('Logout error: ' . $e->getMessage());
+        return response()->json(['error' => 'Error al cerrar sesión'], 500);
+    }
+}
+
+
 
 public function store(Request $request)
 {

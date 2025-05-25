@@ -14,11 +14,11 @@ class Coche extends Model
         'motor_id',
         'precio_basico',
         'precio_total',
-        'imagenes', // Guardar imágenes
+        'imagenes_ruta', // Cambiado de 'imagenes' a 'imagenes_ruta'
     ];
 
     protected $casts = [
-        'imagenes' => 'array', // Manejo como array en PHP
+        'imagenes_ruta' => 'array', // Ahora maneja las rutas como JSON
     ];
 
     // Relaciones
@@ -46,11 +46,11 @@ class Coche extends Model
     public function calcularPrecioTotal()
     {
         return round(
-            ($this->kit->precio + 
-             $this->caja->precio + 
-             $this->modelo->precio + 
-             $this->motor->precio + 
-             $this->precio_basico) * 1.21, 
+            ($this->kit->precio +
+             $this->caja->precio +
+             $this->modelo->precio +
+             $this->motor->precio +
+             $this->precio_basico) * 1.21,
             2
         );
     }
@@ -62,9 +62,10 @@ class Coche extends Model
             $coche->precio_total = $coche->calcularPrecioTotal();
         });
     }
-    public function getImagenesUrlAttribute()
-{
-    return collect($this->imagenes)->map(fn ($imagen) => url("storage/coches/{$imagen}"));
-}
 
+    // Obtener las URLs de las imágenes desde la columna JSON
+    public function getImagenesRutaUrlAttribute()
+    {
+        return collect($this->imagenes_ruta)->map(fn($ruta) => asset("storage/{$ruta}"));
+    }
 }

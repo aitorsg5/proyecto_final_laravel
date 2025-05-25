@@ -9,8 +9,8 @@ class CajaController extends Controller
 {
     public function index()
     {
-        $cajas = Caja::all();
-        return view('cajas.index', compact('cajas'));
+    return response()->json(Caja::all());
+
     }
 
     public function create()
