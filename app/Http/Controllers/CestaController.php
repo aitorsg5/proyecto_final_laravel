@@ -26,16 +26,18 @@ public function store(Request $request)
         'caja_id' => 'required|exists:cajas,id',
         'modelo_id' => 'required|exists:modelos,id',
         'motor_id' => 'required|exists:motores,id',
-        'precio_total' => 'required|numeric',
+        'user_id' => 'required|exists:users,id',
+        'precio_total' => 'required|numeric',  // Validar que venga precio_total y sea numérico
     ]);
 
-    $cesta = Cesta::create(array_merge(
-        $request->only(['coche_id', 'kit_id', 'caja_id', 'modelo_id', 'motor_id', 'precio_total']),
-    ['user_id' => 1]  // ID fijo para pruebas
-    ));
+    $cesta = Cesta::create($request->only([
+        'coche_id', 'kit_id', 'caja_id', 'modelo_id', 'motor_id', 'user_id', 'precio_total'
+    ]));
 
     return response()->json(['message' => 'Cesta creada con éxito', 'cesta' => $cesta], 201);
 }
+
+
 
 
 

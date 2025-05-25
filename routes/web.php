@@ -49,8 +49,9 @@ Route::get('/storage/coches/{filename}', function ($filename) {
         return response()->json(['error' => 'Archivo no encontrado'], 404);
     }
 
-    return response()->file($path)
-        ->header('Access-Control-Allow-Origin', '*')
-        ->header('Access-Control-Allow-Methods', 'GET')
-        ->header('Access-Control-Allow-Headers', 'Content-Type');
+   return response()->file($path, [
+    'Access-Control-Allow-Origin' => '*',
+    'Access-Control-Allow-Methods' => 'GET',
+    'Access-Control-Allow-Headers' => 'Content-Type',
+]);
 });
