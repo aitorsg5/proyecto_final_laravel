@@ -24,6 +24,9 @@ Route::get('/users', [UserController::class, 'index']);
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+Route::middleware('auth:sanctum')->put('/user/update', [UserController::class, 'update']);
+
+
 Route::post('/post', [UserController::class, 'store']);
 Route::post('/login', [UserController::class, 'login']);
 

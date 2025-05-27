@@ -72,21 +72,33 @@ public function store(Request $request)
     return response()->json($usuario, 201); // Código 201 indica que se creó correctamente
 }
 
-public function update(Request $request, $id)
+public function update(Request $request)
 {
+    // Obtiene el usuario autenticado por el token
+    $usuario = $request->user();
+
+    if (!$usuario) {
+        return response()->json(['error' => 'Usuario no autenticado'], 401);
+    }
+
     // Validamos los datos recibidos
     $validatedData = $request->validate([
         'name' => 'sometimes|required|string|max:255',
-        'email' => 'sometimes|required|email|unique:users,email,' . $id,
+        // Aquí la validación debe ignorar el email del usuario actual
+        'email' => 'sometimes|required|email|unique:users,email,' . $usuario->id,
         'password' => 'sometimes|required|min:6',
     ]);
 
-    // Buscamos el usuario por ID
-    $usuario = User::findOrFail($id);
+    // Si se actualiza la contraseña, cifrarla
+    if (isset($validatedData['password'])) {
+        $validatedData['password'] = bcrypt($validatedData['password']);
+    }
 
     // Actualizamos el usuario con los datos validados
     $usuario->update($validatedData);
 
     return response()->json($usuario);  // Retorna el usuario actualizado
-    }
+}
+
+
 }
